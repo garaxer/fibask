@@ -1,15 +1,20 @@
 import { useState } from "react";
 
-const useFibonacci = (outputFn: (output: string) => void) => {
+const useFibonacci = (addOutput: (output: string) => void) => {
   const [gameState, setGameState] = useState(0);
   if (gameState === 0) {
-    outputFn("Enter a number");
+    addOutput("Enter a number");
     setGameState(gameState + 1);
   }
 
   const addInput = (input: string) => {
+    let output: undefined | string = undefined
     if (!isNaN(parseInt(input))) {
-      outputFn(`Thank you for entering ${parseInt(input)}`);
+        output = `Thank you for entering ${parseInt(input)}`;
+    }
+
+    if (output) {
+        return output
     }
   };
 

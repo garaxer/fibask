@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 enum GameStage {
   First,
@@ -8,19 +8,23 @@ enum GameStage {
 type GameState = {
   [key: string]: number;
 };
+
+const fibonacciNumbers = [
+  0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987,
+];
+
 const useFibonacci = ({
   addOutput,
 }: {
-  // messages: { user: string; message: string; id: number }[];
   addOutput: (output: string) => void;
 }) => {
   const [gameStage, setGameStage] = useState(GameStage.First);
   const gameState = useRef<GameState | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startGameMessage =
+    "Please input the number of time in seconds between emitting numbers and their frequency";
   if (gameStage === GameStage.First) {
-    addOutput(
-      "Please input the number of time in seconds between emitting numbers and their frequency"
-    );
+    addOutput(startGameMessage);
     setGameStage(GameStage.Second);
   }
 
@@ -31,40 +35,47 @@ const useFibonacci = ({
     timerRef.current = setInterval(() => {
       const game = gameState.current
         ? Object.entries(gameState.current)
+            .sort((a, b) => b[1] - a[1])
             .map(([k, v]) => `${k}:${v}`)
             .join(", ")
         : "";
-      console.log(game);
-      addOutput("say current numbers in gameState" + game);
+      game && addOutput(game);
     }, timer * 1000);
     return undefined;
   }
 
-  const addInput = (input: string) => {
+  const addInput = (input: string): string[] => {
+    const inputAsNumber = parseInt(input);
     if (gameStage === GameStage.Second) {
-      if (isNaN(parseInt(input))) {
-        //back to stage 1
-        return "Please input the number of time in seconds between emitting numbers and their frequency";
+      if (isNaN(inputAsNumber)) {
+        return [startGameMessage];
       }
-      const output = startTimerStage(parseInt(input));
-      if (output) {
-        return output;
+      const feedback = startTimerStage(inputAsNumber);
+      if (feedback) {
+        return [feedback];
       } else {
         setGameStage(GameStage.Three);
+        return ["Please enter the first number"];
       }
-    } else if (gameStage === GameStage.Three) {
-      if (isNaN(parseInt(input))) {
-        //back to stage 1
-        return "That is not a valid command, please enter stop or a number";
-      }
-      gameState.current = {
-        ...gameState.current,
-        [input]: 1 + (gameState?.current?.[input] ?? 0),
-      };
-      return 'Please enter the next number';
     }
-
-    return "Please enter the first number";
+    if (isNaN(inputAsNumber)) {
+      return [
+        `Sorry, that is not a valid input, please enter ${
+          true ? "halt" : "resume"
+        }, quit or a number`,
+      ];
+    }
+    if (inputAsNumber < 1 || inputAsNumber >= 1000) {
+      return [
+        "Please enter a number greater than 0 and less than or equal to 1000",
+      ];
+    }
+    gameState.current = {
+      ...gameState.current,
+      [input]: 1 + (gameState?.current?.[input] ?? 0),
+    };
+    const isFib = fibonacciNumbers.includes(inputAsNumber);
+    return [...(isFib ? ["FIB"] : []), "Please enter the next number"];
   };
 
   return addInput;

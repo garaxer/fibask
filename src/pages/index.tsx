@@ -5,25 +5,34 @@ import useFibonacci from "~/hooks/useFibonacci";
 
 const Home: NextPage = () => {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<{ user: string; message: string, id: number }[]>(
-    []
-  );
+  const [messages, setMessages] = useState<
+    { user: string; message: string; id: number }[]
+  >([]);
 
-  const addOutput = (output: string) => setMessages(messages => [...messages, {
-    user: "system",
-    message: output,
-    id: Date.now(),
-  }]);
+  const addOutput = (output: string) =>
+    setMessages((messages) => [
+      ...messages,
+      {
+        user: "system",
+        message: output,
+        id: Date.now(),
+      },
+    ]);
 
-  const addStateToFibGame = useFibonacci({addOutput});
+  const addStateToFibGame = useFibonacci({ addOutput });
 
   const onAdd = () => {
     if (!message) return;
-    const gameOutput = addStateToFibGame(message);
+    const gameOutputs = addStateToFibGame(message);
+    const gameMessages = gameOutputs.map((gameOutput) => ({
+      user: "system",
+      message: gameOutput,
+      id: Date.now(),
+    }));
     setMessages([
       ...messages,
       { user: "user", message, id: Date.now() },
-      ...(gameOutput ? [{ user: "system", message: gameOutput, id: Date.now() }] : []),
+      ...(gameMessages && gameMessages.length ? gameMessages : []),
     ]);
     setMessage("");
   };
@@ -61,7 +70,13 @@ const Home: NextPage = () => {
                 }
                 key={`${message}${id}`}
               >
-                <div className="chat-bubble chat-bubble-info">{message}</div>
+                <div
+                  className={`chat-bubble ${
+                    user === "user" ? "chat-bubble-info" : "chat-bubble-accent"
+                  }`}
+                >
+                  {message}
+                </div>
               </div>
             ))}
             <div ref={messagesEndRef} />

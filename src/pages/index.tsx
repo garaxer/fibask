@@ -19,21 +19,16 @@ const Home: NextPage = () => {
       },
     ]);
 
-  const addStateToFibGame = useFibonacci({ addOutput });
+  const quit = () => setMessages([]);
+  const addStateToFibGame = useFibonacci({ addOutput, quit });
 
   const onAdd = () => {
-    if (!message) return;
-    const gameOutputs = addStateToFibGame(message);
-    const gameMessages = gameOutputs.map((gameOutput) => ({
-      user: "system",
-      message: gameOutput,
-      id: Date.now(),
-    }));
-    setMessages([
+    if (!message && !messages.slice(-1)[0]?.message.includes('any key')) return;
+    setMessages((messages) => [
       ...messages,
       { user: "user", message, id: Date.now() },
-      ...(gameMessages && gameMessages.length ? gameMessages : []),
     ]);
+    addStateToFibGame(message);
     setMessage("");
   };
 
@@ -82,14 +77,14 @@ const Home: NextPage = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className=" flex content-between items-center">
+          <div className="flex content-between items-center">
             <input
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onSubmit={onAdd}
               className="mr-5 w-full rounded-lg border-2 border-gray-300 p-5"
-              placeholder="Message"
+              placeholder="Guess"
               onKeyDown={(e) => e.key === "Enter" && onAdd()}
             />
             <button className="btn-primary btn text-white" onClick={onAdd}>

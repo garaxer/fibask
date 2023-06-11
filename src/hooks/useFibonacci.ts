@@ -99,7 +99,6 @@ const useFibonacci = ({
         const timeLeft = timeLeftOver
           ? timeLeftOver - (Date.now() - timerStartTime)
           : gameStatFrequencyInSecs * 1000 - (Date.now() - timerStartTime);
-        console.log(timeLeft);
         setTimeLeftOver(timeLeft);
         return addOutput("timer halted");
       }

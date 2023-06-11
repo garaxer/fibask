@@ -13,9 +13,9 @@ Test using `npm run test`
 Please describe how you would go about implementing this new UI in your application?
 Would you need to restructure your solution in any way?
 In the webapp I am reliant on useState and useRef hooks to keep track of various elements of the application each render.
-I would need to restrucutre the application and put the logic in a backend api, that can be used by any ui, giving the api the users inputs and displaying the return messages instead of the front end handling the logic. Instead of storing the state the in frontend the backend would use a session or similar in-memory store to keep track of the state in the backend, if we wanted the game state to be persistant we can use a database.
-In the webapp, I would block user input while waiting for the response, loading indicates and I would use websockets to display the current game state, based on the timer.
-Would have mock the api response for unit testing. 
+I would need to restrucutre the application and put the logic in a backend api, that can be used by any ui, giving the api the users inputs and displaying the return messages instead of the front end handling the logic. Instead of storing the state in the frontend the backend would use a session or similar in-memory store to keep track of the state in the backend, if we wanted the game state to be persistant we can use a database.
+In the webapp, I would block user input while waiting for the response, use fetching indicators and I would use websockets to display the current game state, based on the timer.
+I would have mock the api response for unit testing. 
 In the new UI, much like the webapp I would give the inputs to the api and display the returned result.
 
 

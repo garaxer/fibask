@@ -13,7 +13,7 @@ Test using `npm run test`
 Please describe how you would go about implementing this new UI in your application?
 Would you need to restructure your solution in any way?
 In the webapp I am reliant on useState and useRef hooks to keep track of various elements of the application each render.
-I would put the logic in a backend api, giving the api the users inputs and displaying the return messages instead. Instead of storing the state the in frontend the backend would use a session or similar to keep track of the state in the backend.
+I would put the logic in a backend api, giving the api the users inputs and displaying the return messages instead of the front end handling the logic. Instead of storing the state the in frontend the backend would use a session or similar in-memory store to keep track of the state in the backend, if we wanted the game state to be persistant we can use a database.
 I would use websockets to display the current game state, based on the timer.
 Would have mock the api response for unit testing.
 
@@ -28,6 +28,8 @@ Add new features such as, saving game state into a database retieved with an acc
 
 
 3. What did you think about this coding test - is there anything you'd suggest in order to improve it?
+Straight forward enough, based on question one it was hard to interpret if you wanted a full stack application to begin with or talk about how I would make one by answering question one.
+
 
 # Created using Create T3 App
 

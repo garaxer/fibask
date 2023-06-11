@@ -126,7 +126,7 @@ const useFibonacci = ({
         }, quit or a number`
       );
     }
-    if (inputAsNumber < 1 || inputAsNumber >= 1000) {
+    if (inputAsNumber < 1 || inputAsNumber > 1000) {
       return addOutput(
         "Please enter a number greater than 0 and less than or equal to 1000"
       );

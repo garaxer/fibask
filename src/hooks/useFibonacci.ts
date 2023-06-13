@@ -161,6 +161,11 @@ const useFibonacci = ({
       return addOutput("Please enter a number greater than or equal to 0");
     }
 
+    if (!/^\d+$/.test(input)) {
+      return addOutput("Please enter a valid number");
+
+    }
+
     let inputAsBigNumber: BigNumber;
     try {
       inputAsBigNumber = BigNumber(input);

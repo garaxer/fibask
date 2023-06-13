@@ -6,7 +6,7 @@ const MessageBubble = ({
   side: "left" | "right";
 }) => {
   return (
-    <div className={side === "left" ? "chat chat-end" : "chat chat-start"}>
+    <div className={side === "left" ? "chat chat-start" : "chat chat-end"}>
       <div
         className={`chat-bubble overflow-auto ${
           side === "left" ? "chat-bubble-info" : "chat-bubble-accent"

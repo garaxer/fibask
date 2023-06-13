@@ -10,9 +10,21 @@ type GameState = {
   [key: number]: number;
 };
 
-const fibonacciNumbers = [
-  0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987,
-];
+function isFibonacci(num: number, a = 0, b = 1) {
+  if (num === 0 || num === 1) {
+    return true;
+  }
+
+  const nextNumber = a + b;
+
+  if (nextNumber === num) {
+    return true;
+  } else if (nextNumber > num) {
+    return false;
+  }
+
+  return isFibonacci(num, b, nextNumber);
+}
 
 const useFibonacci = ({
   addOutput,
@@ -31,6 +43,7 @@ const useFibonacci = ({
   const [timeLeftOver, setTimeLeftOver] = useState<number | undefined>(
     undefined
   );
+  const [fibKeys, setFibKeys] = useState<{ [key: number]: boolean }>({});
 
   function clearTimers() {
     timerRef.current && clearInterval(timerRef.current);
@@ -42,8 +55,8 @@ const useFibonacci = ({
   function clearState() {
     gameState.current = null;
     clearTimers();
-    setGameStatFrequencyInSecs(0)
-    setTimerStartTime(0)
+    setGameStatFrequencyInSecs(0);
+    setTimerStartTime(0);
     setTimeLeftOver(undefined);
   }
 
@@ -126,16 +139,18 @@ const useFibonacci = ({
         }, quit or a number`
       );
     }
-    if (inputAsNumber < 1 || inputAsNumber > 1000) {
-      return addOutput(
-        "Please enter a number greater than 0 and less than or equal to 1000"
-      );
+    if (inputAsNumber < 0) {
+      return addOutput("Please enter a number greater than or equal to 0");
     }
     gameState.current = {
       ...gameState.current,
       [inputAsNumber]: 1 + (gameState?.current?.[inputAsNumber] ?? 0),
     };
-    const isFib = fibonacciNumbers.includes(inputAsNumber);
+    const cachedFibKey = fibKeys[inputAsNumber];
+    const isFib = cachedFibKey
+      ? cachedFibKey
+      : isFibonacci(inputAsNumber);
+    !cachedFibKey && setFibKeys({ ...fibKeys, [inputAsNumber]: isFib });
     if (isFib) {
       addOutput("FIB");
     }

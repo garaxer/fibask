@@ -8,7 +8,7 @@ head to localhost:3000 and follow the prompts
 
 Test using `npm run test`
 
-## Notes
+## Code task notes
 1. You have a new requirement to implement for your application: its logic should stay exactly the same but it will need to have a different user interface (e.g. if you wrote a web app, a different UI may be a REPL).
 Please describe how you would go about implementing this new UI in your application?
 Would you need to restructure your solution in any way?
@@ -30,6 +30,16 @@ Add new features such as, saving game state into a database retieved with an acc
 
 3. What did you think about this coding test - is there anything you'd suggest in order to improve it?
 Straight forward enough, based on question one it was hard to interpret if you wanted a full stack application to begin with or talk about how I would make one by answering question one.
+
+#Result: Failed
+The team loved it was a deployed and functional application!
+Typescript and tailwind usage was good
+Some seperation of logic using useFib hook
+What left short:
+Lack of depth around the written questions
+The code as implemented didn’t allow for ease of porting or extensibility
+Testing did not run out of the box
+Only 1 core component that would have been better as components.
 
 
 # Created using Create T3 App

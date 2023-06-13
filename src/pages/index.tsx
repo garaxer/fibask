@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
+import MessageBubble from "~/components/MessageBubble";
 import useFibonacci from "~/hooks/useFibonacci";
 
 const Home: NextPage = () => {
@@ -23,7 +24,7 @@ const Home: NextPage = () => {
   const addStateToFibGame = useFibonacci({ addOutput, quit });
 
   const onAdd = () => {
-    if (!message && !messages.slice(-1)[0]?.message.includes('any key')) return;
+    if (!message && !messages.slice(-1)[0]?.message.includes("any key")) return;
     setMessages((messages) => [
       ...messages,
       { user: "user", message, id: Date.now() },
@@ -51,7 +52,10 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-start bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 role="heading" className="text-5xl font-extrabold tracking-tight text-white  sm:text-[5rem]">
+          <h1
+            role="heading"
+            className="text-5xl font-extrabold tracking-tight text-white  sm:text-[5rem]"
+          >
             Fibonacci Guesser
           </h1>
           <div
@@ -59,20 +63,11 @@ const Home: NextPage = () => {
             style={{ maxHeight: 400 }}
           >
             {messages.map(({ message, user, id }) => (
-              <div
-                className={
-                  user === "user" ? "chat chat-end" : "chat chat-start"
-                }
+              <MessageBubble
                 key={`${message}${id}`}
-              >
-                <div
-                  className={`chat-bubble overflow-auto ${
-                    user === "user" ? "chat-bubble-info" : "chat-bubble-accent"
-                  }`}
-                >
-                  {message}
-                </div>
-              </div>
+                side={user === "system" ? "left" : "right"}
+                message={message}
+              />
             ))}
             <div ref={messagesEndRef} />
           </div>

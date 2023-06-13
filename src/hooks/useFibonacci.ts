@@ -167,6 +167,9 @@ const useFibonacci = ({
     } catch (error) {
       return addOutput("Please enter a valid integer");
     }
+    if(!isPartOfFirst1000Fibs(inputAsBigNumber)) {
+      addOutput("That number is greater than the 1000th fibonacci number we will not perform the check but we will add it to the count");
+    }
 
     gameState.current = {
       ...gameState.current,

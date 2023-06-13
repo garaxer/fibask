@@ -7,7 +7,7 @@ enum GameStage {
   Four, // Exit game on next key
 }
 type GameState = {
-  [key: string]: number;
+  [key: number]: number;
 };
 
 const fibonacciNumbers = [
@@ -126,14 +126,14 @@ const useFibonacci = ({
         }, quit or a number`
       );
     }
-    if (inputAsNumber < 1 || inputAsNumber >= 1000) {
+    if (inputAsNumber < 1 || inputAsNumber > 1000) {
       return addOutput(
         "Please enter a number greater than 0 and less than or equal to 1000"
       );
     }
     gameState.current = {
       ...gameState.current,
-      [input]: 1 + (gameState?.current?.[input] ?? 0),
+      [inputAsNumber]: 1 + (gameState?.current?.[inputAsNumber] ?? 0),
     };
     const isFib = fibonacciNumbers.includes(inputAsNumber);
     if (isFib) {

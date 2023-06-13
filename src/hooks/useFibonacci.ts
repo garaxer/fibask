@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import bigInt, { BigInteger } from 'big-integer';
 
 enum GameStage {
   First, // Ask for time
@@ -7,23 +8,40 @@ enum GameStage {
   Four, // Exit game on next key
 }
 type GameState = {
-  [key: number]: number;
+  [key: string]: number;
 };
 
-function isFibonacci(num: number, a = 0, b = 1) {
-  if (num === 0 || num === 1) {
-    return true;
-  }
+function isFibonacciNumber(number: string): boolean {
+  // Check if the number is a perfect square
+  const isPerfectSquare = (n: BigInteger): boolean => {
+    let x = n;
+    let y = bigInt.one;
 
-  const nextNumber = a + b;
+    while (x.compareTo(y) > 0) {
+      x = x.add(y).divide(2);
+      y = n.divide(x);
+    }
 
-  if (nextNumber === num) {
-    return true;
-  } else if (nextNumber > num) {
-    return false;
-  }
+    return x.multiply(x).equals(n);
+  };
 
-  return isFibonacci(num, b, nextNumber);
+  const bigNumber = bigInt(number);
+
+  // Check if the number is a Fibonacci number
+  // A number is a Fibonacci number if and only if
+  // 5 * number^2 + 4 or 5 * number^2 - 4 is a perfect square
+  const candidate1 = bigNumber.multiply(bigNumber).multiply(5).plus(4);
+  const candidate2 = bigNumber.multiply(bigNumber).multiply(5).minus(4);
+
+  return isPerfectSquare(candidate1) || isPerfectSquare(candidate2);
+}
+
+const thousanthFibNumber =
+  4346655768693745643568852767504062580256466051737178040248172908953655541794905189040387984007925516929592n;
+2593080322634775209689623239873322471161642996440906533187938298969649928516003704476137795166849228875n;
+
+function isPartOfFirst1000Fibs(num: BigInteger) {
+  return num.compare(thousanthFibNumber) <= 0;
 }
 
 const useFibonacci = ({
@@ -43,7 +61,7 @@ const useFibonacci = ({
   const [timeLeftOver, setTimeLeftOver] = useState<number | undefined>(
     undefined
   );
-  const [fibKeys, setFibKeys] = useState<{ [key: number]: boolean }>({});
+  const [fibKeys, setFibKeys] = useState<{ [key: string]: boolean }>({});
 
   function clearTimers() {
     timerRef.current && clearInterval(timerRef.current);
@@ -142,6 +160,14 @@ const useFibonacci = ({
     if (inputAsNumber < 0) {
       return addOutput("Please enter a number greater than or equal to 0");
     }
+    let inputAsBigNumber: BigInteger;
+
+    try {
+      inputAsBigNumber = bigInt(input);
+    } catch (error) {
+      return addOutput("Please enter a valid integer");
+    }
+    
     gameState.current = {
       ...gameState.current,
       [inputAsNumber]: 1 + (gameState?.current?.[inputAsNumber] ?? 0),
@@ -149,8 +175,8 @@ const useFibonacci = ({
     const cachedFibKey = fibKeys[inputAsNumber];
     const isFib = cachedFibKey
       ? cachedFibKey
-      : isFibonacci(inputAsNumber);
-    !cachedFibKey && setFibKeys({ ...fibKeys, [inputAsNumber]: isFib });
+      : isPartOfFirst1000Fibs(inputAsBigNumber) && isFibonacciNumber(input);
+    !cachedFibKey && setFibKeys({ ...fibKeys, [input]: isFib });
     if (isFib) {
       addOutput("FIB");
     }

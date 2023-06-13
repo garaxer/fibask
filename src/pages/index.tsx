@@ -66,7 +66,7 @@ const Home: NextPage = () => {
                 key={`${message}${id}`}
               >
                 <div
-                  className={`chat-bubble ${
+                  className={`chat-bubble overflow-x-scroll ${
                     user === "user" ? "chat-bubble-info" : "chat-bubble-accent"
                   }`}
                 >

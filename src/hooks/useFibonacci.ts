@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import bigInt, { BigInteger } from 'big-integer';
+import BigNumber from 'bignumber.js';
 
 enum GameStage {
   First, // Ask for time
@@ -11,37 +11,37 @@ type GameState = {
   [key: string]: number;
 };
 
+function isPerfectSquare(n: BigNumber): boolean {
+  const sqrt = n.squareRoot();
+  const roundedSqrt = sqrt.integerValue();
+  return roundedSqrt.multipliedBy(roundedSqrt).isEqualTo(n);
+}
+
 function isFibonacciNumber(number: string): boolean {
-  // Check if the number is a perfect square
-  const isPerfectSquare = (n: BigInteger): boolean => {
-    let x = n;
-    let y = bigInt.one;
-
-    while (x.compareTo(y) > 0) {
-      x = x.add(y).divide(2);
-      y = n.divide(x);
-    }
-
-    return x.multiply(x).equals(n);
-  };
-
-  const bigNumber = bigInt(number);
+  const bigNumber = new BigNumber(number);
 
   // Check if the number is a Fibonacci number
   // A number is a Fibonacci number if and only if
-  // 5 * number^2 + 4 or 5 * number^2 - 4 is a perfect square
-  const candidate1 = bigNumber.multiply(bigNumber).multiply(5).plus(4);
-  const candidate2 = bigNumber.multiply(bigNumber).multiply(5).minus(4);
+  // (5 * number^2 + 4) or (5 * number^2 - 4) is a perfect square
+  const candidate1 = bigNumber
+    .multipliedBy(bigNumber)
+    .multipliedBy(5)
+    .plus(4);
+  const candidate2 = bigNumber
+    .multipliedBy(bigNumber)
+    .multipliedBy(5)
+    .minus(4);
 
-  return isPerfectSquare(candidate1) || isPerfectSquare(candidate2);
+  return (
+    isPerfectSquare(candidate1) || isPerfectSquare(candidate2)
+  );
 }
 
 const thousanthFibNumber =
-  4346655768693745643568852767504062580256466051737178040248172908953655541794905189040387984007925516929592n;
-2593080322634775209689623239873322471161642996440906533187938298969649928516003704476137795166849228875n;
+  '43466557686937456435688527675040625802564660517371780402481729089536555417949051890403879840079255169295922593080322634775209689623239873322471161642996440906533187938298969649928516003704476137795166849228875';
 
-function isPartOfFirst1000Fibs(num: BigInteger) {
-  return num.compare(thousanthFibNumber) <= 0;
+function isPartOfFirst1000Fibs(num: BigNumber) {
+  return num.comparedTo(BigNumber(thousanthFibNumber)) <= 0;
 }
 
 const useFibonacci = ({
@@ -160,19 +160,19 @@ const useFibonacci = ({
     if (inputAsNumber < 0) {
       return addOutput("Please enter a number greater than or equal to 0");
     }
-    let inputAsBigNumber: BigInteger;
 
+    let inputAsBigNumber: BigNumber;
     try {
-      inputAsBigNumber = bigInt(input);
+      inputAsBigNumber = BigNumber(input);
     } catch (error) {
       return addOutput("Please enter a valid integer");
     }
-    
+
     gameState.current = {
       ...gameState.current,
-      [inputAsNumber]: 1 + (gameState?.current?.[inputAsNumber] ?? 0),
+      [input]: 1 + (gameState?.current?.[input] ?? 0),
     };
-    const cachedFibKey = fibKeys[inputAsNumber];
+    const cachedFibKey = fibKeys[input];
     const isFib = cachedFibKey
       ? cachedFibKey
       : isPartOfFirst1000Fibs(inputAsBigNumber) && isFibonacciNumber(input);

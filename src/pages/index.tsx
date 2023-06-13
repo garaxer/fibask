@@ -55,7 +55,7 @@ const Home: NextPage = () => {
             Fibonacci Guesser
           </h1>
           <div
-            className="card mx-auto w-full max-w-3xl overflow-scroll bg-primary p-5 text-3xl text-white bg-blend-hard-light shadow-xl"
+            className="card mx-auto w-full max-w-3xl overflow-auto bg-primary p-5 text-3xl text-white bg-blend-hard-light shadow-xl"
             style={{ maxHeight: 400 }}
           >
             {messages.map(({ message, user, id }) => (
@@ -66,7 +66,7 @@ const Home: NextPage = () => {
                 key={`${message}${id}`}
               >
                 <div
-                  className={`chat-bubble overflow-x-scroll ${
+                  className={`chat-bubble overflow-auto ${
                     user === "user" ? "chat-bubble-info" : "chat-bubble-accent"
                   }`}
                 >
